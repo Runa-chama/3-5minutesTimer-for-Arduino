@@ -8,8 +8,8 @@
 
 const int led [5] = {5, 6, 7, 8, 9};
 
-boolean count = false;
-boolean finish = false;
+boolean is_count = false;
+boolean is_finish = false;
 
 int count_time = 180;
 int led_on = HIGH;
@@ -20,7 +20,7 @@ int time_count = 0;
 int beep_tone = 1500;
 
 void counter() {
-  if (time_count != (count_time * 2) && count == true) {
+  if (time_count != (count_time * 2) && is_count == true) {
     
     for (int n = 0; n < 5; n++)
       digitalWrite(led[n], HIGH);
@@ -35,21 +35,21 @@ void counter() {
   {
     if (time_count == count_time * 2)
     {
-      count = false;
-      finish = true;
+      is_count = false;
+      is_finish = true;
     }
   }
-  if (finish == true && count == false)
+  if (is_finish == true && is_count == false)
   {
     for (int a = 0; a < 5; a++)
       digitalWrite(led[a], HIGH);
     
     tone(beep_pin, beep_tone, 400);
-    finish = led_num > 4 ? false : true;
+    is_finish = led_num > 4 ? false : true;
     led_num = led_num > 4 ? 0 : led_num;
     digitalWrite(led[led_num], LOW);
     ++led_num;
-    if (finish == false)
+    if (!is_finish)
     {
       led_num = 0;
       for (int n = 0; n < cache_minute; n++)
@@ -57,7 +57,7 @@ void counter() {
     }
 
   }
-  ++time_count;
+  time_count++;
 }
 
 
@@ -84,7 +84,7 @@ void setup() {
 }
 
 void loop() {
-  if (digitalRead(time_sw) == sw_on && count == false && finish == false)
+  if (digitalRead(time_sw) == sw_on && is_count == false && is_finish == false)
   {
     for (int n = 0; n < 5; n++)
       digitalWrite(led[n], HIGH);
@@ -100,17 +100,17 @@ void loop() {
       delay(150);
     }
     
-    count = false;
+    is_count = false;
     delay(300);
   }
   if (digitalRead(start_sw) == sw_on) {
-    if (count == false && finish == false)
+    if (is_count == false && is_finish == false)
     {
       time_count = 0;
       minute = cache_minute;
       count_time = cache_minute * 60;
       minute++;
-      count = true;
+      is_count = true;
       tone(beep_pin, beep_tone, 50);
       delay(150);
       tone(beep_pin, beep_tone, 50);
@@ -119,7 +119,7 @@ void loop() {
     else
     {
       tone(beep_pin, beep_tone, 250);
-      count = false;
+      is_count = false;
       time_count = 0;
       count_time = cache_minute * 60;
       minute = cache_minute;
